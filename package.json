@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "start": "wds --node-resolve --app-index public/index.html --open --watch"
+  },
+  "dependencies": {
+    "@lit/reactive-element": "^1.0.0",
+    "lit": "^2.0.0",
+    "lit-element": "^3.0.0",
+    "lit-html": "^2.0.0"
+  },
+  "devDependencies": {
+    "@web/dev-server": "^0.1.29"
+  }
+}
