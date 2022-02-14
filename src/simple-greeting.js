@@ -1,5 +1,10 @@
 import { html, css, LitElement } from "lit";
 
+
+function emitter(data) {
+  console.log("Emitted", data.detail);
+}
+
 export class SimpleGreeting extends LitElement {
   static styles = css`
     p {
@@ -10,13 +15,7 @@ export class SimpleGreeting extends LitElement {
   static get properties() {
     return {
       name: { type: String },
-      data: {
-        type: String,
-        hasChanged: (value, oldValue) => {
-          console.log("has changed", oldValue, value);
-          return oldValue === value;
-        },
-      },
+      data: { type: String },
     };
   }
 
@@ -24,23 +23,29 @@ export class SimpleGreeting extends LitElement {
     super.connectedCallback();
     this.name = '';
     this.data = "";
+    this.emitter = emitter.bind(this);
+    document.addEventListener("emit", this.emitter, { passive: true });
+
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    document.removeEventListener("emit", this.emitter);
   }
 
-  keyup(evt) {
-    if (evt.target.value) {
+  clicked(evt) {
+    if (!evt) {
       return false;
     }
-    console.log(evt.target.value);
+    document.dispatchEvent(
+      new CustomEvent("emit", { detail: { value: 'Hello' } })
+    );
   }
 
   render() {
     return html`
       <p>Hello ${this.data}!</p> 
-      <input @keyup="${this.keyup}" type="text" .value="${this.data}">
+      <button @click="${this.clicked}"> Click !! </button>
     `;
   }
 }
